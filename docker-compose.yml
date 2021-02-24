@@ -1,25 +1,24 @@
-version: "3.4"
-services: 
-    hello:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: hello
-        volumes:
-            - ./tmp:/tmp
-        labels:
-            ofelia.enabled: "true"
-            ofelia.job-run.say-hello-again.schedule: "@every 15s"
-            ofelia.job-run.say-hello-again.command: "python main.py"
-        restart: always
-    ofelia:
-        image: mcuadros/ofelia:latest
-        depends_on:
-            - hello
-        command: daemon --docker
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            # - ./conf/config.ini:/etc/ofelia/config.ini
-            # - ./ofelia_logs:/tmp/logs
-        restart: always
+version: '3.7'
 
+services:
+  app:
+    image: app
+    container_name: app
+    restart: always
+    user: user
+    build:
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.app.schedule: "@every 10s"
+      ofelia.job-exec.app.command: "python hello.py"
+
+  ofelia:
+    image: mcuadros/ofelia:latest
+    restart: always
+    depends_on:
+      - app
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
