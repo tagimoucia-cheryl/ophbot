@@ -5,14 +5,14 @@ services:
     image: app
     container_name: app
     restart: always
-    user: user
+    user: cronbot
     build:
       context: .
       dockerfile: Dockerfile
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.app.schedule: "@every 10s"
-      ofelia.job-exec.app.command: "python hello.py"
+      ofelia.job-exec.app.command: "Rscript app/hello.R"
 
   ofelia:
     image: mcuadros/ofelia:latest

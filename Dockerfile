@@ -1,18 +1,30 @@
-FROM python:3.8-slim
+# Pull your base docker image
+# TODO move the R and Python these out into separate dockerfiles
 
-RUN groupadd --gid 1000 user && \
-    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash user
+# PYTHON
+# FROM python:3.8-slim
 
-RUN mkdir /home/user/app
-ADD setup.py /home/user/app
-ADD app /home/user/app/app
-ADD hello.py /home/user/app
+# R
+FROM rocker/r-ver:4.0.0-ubuntu18.04
 
-RUN cd /home/user/app && \
-    pip install --no-cache-dir .
+# Remove root privileges from the container process and run as 'cronbot'
+RUN groupadd --gid 1000 cronbot && \
+    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash cronbot
 
-RUN chown -R "1000:1000" /home/user
-USER user
-WORKDIR /home/user/app
+# Create a directory called 'app' to hold your code
+RUN mkdir /home/cronbot/app
+# Add your local directory (also called 'app') into 'app'
+ADD app /home/cronbot/app/app
 
+# Python : install any libraries
+# RUN cd /home/user/app && \
+#     pip install --no-cache-dir .
+
+# Ensure all files are owned by the user cronbot
+RUN chown -R "1000:1000" /home/cronbot
+USER cronbot
+WORKDIR /home/cronbot/app
+
+# Start the container with a 'dummy' process that prevents the container
+# immediately stopping
 CMD tail -f /dev/null
