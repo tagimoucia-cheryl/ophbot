@@ -16,7 +16,9 @@ services:
           - HTTPS_PROXY
     labels:
       ofelia.enabled: "true"
+      # Set the schedule for your job
       ofelia.job-exec.app.schedule: "@every 10s"
+      # Run this script on the above schedule
       ofelia.job-exec.app.command: "Rscript app/hello.R"
       ofelia.job-exec.app.slack-webhook: ${SLACK_URL_BOT}
 
