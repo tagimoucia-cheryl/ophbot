@@ -1,0 +1,3 @@
+# Example .env file; rename this one and edit the secrets below
+# Keep your .env out of version control
+SLACK_URL_BOT=https://hooks.slack.com/services/YOUR_WEBHOOK_URL_WILL_BE_A_LONG_STRING

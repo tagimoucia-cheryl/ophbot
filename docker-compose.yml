@@ -13,6 +13,7 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.app.schedule: "@every 10s"
       ofelia.job-exec.app.command: "Rscript app/hello.R"
+      ofelia.job-exec.app.slack-webhook: ${SLACK_URL_BOT}
 
   ofelia:
     image: mcuadros/ofelia:latest
