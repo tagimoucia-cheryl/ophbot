@@ -9,6 +9,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+          - http_proxy
+          - https_proxy
+          - HTTP_PROXY
+          - HTTPS_PROXY
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.app.schedule: "@every 10s"
@@ -21,5 +26,10 @@ services:
     depends_on:
       - app
     command: daemon --docker
+    environment:
+        - http_proxy
+        - https_proxy
+        - HTTP_PROXY
+        - HTTPS_PROXY
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
