@@ -7,7 +7,7 @@
 
 library(odbc)
 sort(unique(odbcListDrivers()[[1]]))
-readRenviron(".Renviron")
+readRenviron("app/.Renviron")
 
 con_ids <- dbConnect( odbc(),
                       Driver = "PostgreSQL Driver",
@@ -34,6 +34,4 @@ if (delta > 300) {
 
 print(paste("Last message added to IDS", delta, "seconds ago"))
 
-# exit silently if all OK
-quit(save="no", status=0)
 
