@@ -13,6 +13,9 @@ install_packages:
 
 # this is the default command for the container should manage a series of
 # scripts; need to ensure that we have a graceful way of failing
-app:
-	Rscript app/monitor_ids.R
+# FIXME: this make does not return the app exit code so appears to fail to ofelia
+# see https://askubuntu.com/a/158531
+# .PHONY: app
+# app:
+#	$(shell Rscript app/monitor_ids.R > /dev/null 2>&1 ; echo $$? )
 
