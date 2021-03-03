@@ -1,0 +1,20 @@
+# IMPORTANT
+# DO NOT ADD THIS FILE TO VERSION CONTROL
+
+CLARITY_PWD=bar
+CLARITY_HOST=foo
+CLARITY_USER=green
+
+UDS_PWD=bar
+UDS_HOST=foo
+UDS_USER=green
+
+IDS_PWD=bar
+IDS_HOST=foo
+IDS_USER=green
+
+http_proxy=http://foo.nhs.uk:1234/
+https_proxy=http://foo.nhs.uk:1234/
+HTTP_PROXY=http://foo.nhs.uk:1234/
+HTTPS_PROXY=http://foo.nhs.uk:1234/
+

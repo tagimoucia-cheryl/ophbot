@@ -6,8 +6,7 @@
 # Sends that error to slack as a notification
 
 library(odbc)
-sort(unique(odbcListDrivers()[[1]]))
-readRenviron("app/.Renviron")
+readRenviron("../.Renviron")
 
 con_ids <- dbConnect( odbc(),
                       Driver = "PostgreSQL Driver",

@@ -14,23 +14,26 @@ RUN apt-get update -y && apt-get install -y \
     odbc-postgresql \
     tzdata
 
-COPY odbc.ini /etc/odbc.ini
-COPY odbcinst.ini /etc/odbcinst.ini
+COPY odbc/* /etc/
 
+# External packages (CRAN)
 RUN install2.r data.table odbc checkmate
+
+# External packages (GitHub)
 RUN installGithub.r inform-health-informatics/emapR
 
-# Add your local directory (also called 'app') into 'app'
-ADD app /home/cronbot/app
-
-# Add any local R packages (that don't live in CRAN or github)
+# Local development packages
 # Mainly as a reproducible way of moving code
-# RUN R CMD INSTALL /home/cronbot/packages/emapR_0.1.0.tar.gz
+ADD src /home/cronbot/src
+WORKDIR /home/cronbot/src
+RUN make install_packages
+
+# Add your local directory (also called 'app') into 'app'
+ADD app /home/cronbot/src
 
 # Ensure all files are owned by the user cronbot
 RUN chown -R "1001:1001" /home/cronbot
 USER cronbot
-WORKDIR /home/cronbot/app
 
 # Start the container with a 'dummy' process that prevents the container
 # immediately stopping
