@@ -29,7 +29,7 @@ WORKDIR /home/cronbot/src
 RUN make install_packages
 
 # Add your local directory (also called 'app') into 'app'
-ADD app /home/cronbot/src
+ADD app /home/cronbot/src/app
 
 # Ensure all files are owned by the user cronbot
 RUN chown -R "1001:1001" /home/cronbot

@@ -13,6 +13,7 @@ install_packages:
 
 # this is the default command for the container should manage a series of
 # scripts; need to ensure that we have a graceful way of failing
-app:
-	Rscript app/monitor_ids.R
+# FIXME: won't work if called from ofelia b/c make does not return a 0 exit code
+# app:
+# 	Rscript app/monitor_ids.R
 
