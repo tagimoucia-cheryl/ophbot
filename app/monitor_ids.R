@@ -5,16 +5,13 @@
 # Raises an error if it's not recent
 # Sends that error to slack as a notification
 
-library(odbc)
-readRenviron("../.Renviron")
+con_ids <- DBI::dbConnect(RPostgres::Postgres(),
+                        host = Sys.getenv("IDS_HOST"),
+                        port = 5432,
+                        user = Sys.getenv("IDS_USER"),
+                        password = Sys.getenv("IDS_PWD"),
+                        dbname = "ids_live")
 
-con_ids <- dbConnect( odbc(),
-                      Driver = "PostgreSQL Driver",
-                      Server = Sys.getenv("IDS_HOST"),
-                      Database = "ids_live",
-                      UID = Sys.getenv("IDS_USER"),
-                      PWD = Sys.getenv("IDS_PWD"),
-                      Port = 5432)
 
 query <- "SELECT * FROM public.tbl_ids_master m
 ORDER BY m.unid DESC

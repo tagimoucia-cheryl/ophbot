@@ -17,9 +17,9 @@ services:
     labels:
       ofelia.enabled: "true"
       # Set the schedule for your job
-      ofelia.job-exec.app.schedule: "@every 5m"
+      ofelia.job-exec.app.schedule: "@every 30m"
       # Run this script on the above schedule
-      ofelia.job-exec.app.command: "make app"
+      ofelia.job-exec.app.command: "Rscript app/monitor_ids.R"
       ofelia.job-exec.app.slack-webhook: ${SLACK_URL_BOT}
 
   ofelia:
