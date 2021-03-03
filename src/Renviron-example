@@ -1,5 +1,6 @@
-# IMPORTANT
-# DO NOT ADD THIS FILE TO VERSION CONTROL
+# IMPORTANT: DO NOT ADD THIS FILE TO VERSION CONTROL
+# RENAME from Renviron-example to .Renviron in place and then update the environment variables with
+# actual values
 
 CLARITY_PWD=bar
 CLARITY_HOST=foo
