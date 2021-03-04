@@ -9,6 +9,8 @@ RUN apt-get update -y && apt-get install -y  \
     odbc-postgresql \
     tzdata
 
+RUN apt-get install -y curl gnupg2
+
 # See about installing ODBC drivers here: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
 # Note that the driver version installed needs to match the version used in the code
 # In this case for Ubuntu 18.04: ODBC SQL driver 17
@@ -18,8 +20,7 @@ RUN apt-get update -y
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev mssql-tools
 
 
-COPY odbc.ini /etc/odbc.ini
-COPY odbcinst.ini /etc/odbcinst.ini
+COPY odbc/* /etc/
 # Permissions are such that works fine as root but not from RStudio where user is not root
 # so MUST do the following else an unhelpful error message tells you the file does not exist
 RUN chmod a+rw /etc/odbc.ini && chmod a+rw /etc/odbcinst.ini
