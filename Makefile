@@ -1,4 +1,10 @@
 # Makefile
+UID := $(shell id -u)
+
+.PHONY: foo
+foo:
+	echo $(PWD)
+	echo $(UID)
 
 # build the rstudio image
 rstudio-build: dockerfile-rstudio
@@ -16,11 +22,11 @@ rstudio-run:
 	docker run --rm \
 		-p 8790:8787 \
 		-e PASSWORD=sitrep \
-		-e USERID=$UID \
+		-e USERID=$(UID) \
 		-e ROOT=true \
-		-v $(pwd)/work:/home/rstudio/work \
-		-v $(pwd)/renv:/home/rstudio/renv \
-		-v $(pwd)/libs:/home/rstudio/libs \
+		-v $(PWD)/work:/home/rstudio/work \
+		-v $(PWD)/renv:/home/rstudio/renv \
+		-v $(PWD)/libs:/home/rstudio/libs \
 		-d \
 		--name rstudio-ofelia \
 		r363u-tidyv    
@@ -30,4 +36,14 @@ rstudio-run:
 .PHONY: rstudio-clean
 rstudio-clean:
 	docker stop rstudio-ofelia
+
+# fix permissions
+.PHONY: fix-permissions
+fix-permissions: 
+	# Set the group for all files to be docker. All GAE users are in the docker group
+	chgrp -R docker work  
+	# Grant read, write, and open folder permission for all exisiting files to the docker group, and make new folders created have the docker group
+	chmod -R g+rwXs  work 
+	# For all the directories in here, make all new files created by default have the right group privileges, irrespective of the user UMASK
+	setfacl -R –d –m g::rwX work  
 
