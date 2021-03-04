@@ -10,12 +10,16 @@ docker-compose up --build
 
 What it should do
 
-* Every 10 seconds it will run a 'Hello World!' R script
+* Every 5 mins it will read the last entry from the IDS; if that is not within the last 300 seconds it will raise an alert and 'stop'
 * The job result (success/failure) will be posted to the slack channel.
 
 Features
 
-* Runs `hello.R` every 10 seconds which could contain any bit of code you wish
+* Creates a docker image using Rocker/tidyverse
+* Sets-up ODBC infrastructure for connection to MS-SQL databases (e.g. Epic's Clarity or Caboodle)
+* Installs CRAN and GitHub packages (e.g. [emapR](https://github.com/inform-health-informatics/emapR.git))
+* Builds and installs local packages (to make parts of the code more transportable)
+* Runs `monitor_ids.R` every 5 minutes which could contain any bit of code you wish
 * Adjust the schedule as per the instructions [here](https://github.com/mcuadros/ofelia)
 * Pushes a status message to slack
 
