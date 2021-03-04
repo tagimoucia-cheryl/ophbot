@@ -8,7 +8,7 @@ services:
     user: cronbot
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfile-app
       args:
           - http_proxy
           - https_proxy
