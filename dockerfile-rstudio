@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:3.6.3-ubuntu18.04
+FROM rocker/tidyverse:4.0.3
 
 RUN apt-get update -y && apt-get install -y  \
     unixodbc \
@@ -7,17 +7,22 @@ RUN apt-get update -y && apt-get install -y  \
     freetds-bin \
     freetds-dev \
     odbc-postgresql \
-    tzdata
-
-RUN apt-get install -y curl gnupg2
+    tzdata \
+    curl \
+    gnupg2
 
 # See about installing ODBC drivers here: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
 # Note that the driver version installed needs to match the version used in the code
 # In this case for Ubuntu 18.04: ODBC SQL driver 17
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+# Debian stretch (as per tidyverse:4)
+RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+# Ubuntu 18.04
+# RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 RUN apt-get update -y
-RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev mssql-tools
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools
+# 2021-03-05 fails b/c of dependency error; but reported as optional so try without
+# RUN ACCEPT_EULA=Y apt-get install -y unixodbc-dev 
 
 
 COPY odbc/* /etc/
