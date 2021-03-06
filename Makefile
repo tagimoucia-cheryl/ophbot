@@ -14,7 +14,7 @@ rstudio-build: dockerfile-rstudio
 		 --build-arg https_proxy \
 		 --build-arg HTTP_PROXY \
 		 --build-arg HTTPS_PROXY \
-		 . -t r363u-tidyv
+		 . -t r4-tidyv
 
 # run the rstudio image
 .PHONY: rstudio-run
@@ -29,7 +29,7 @@ rstudio-run:
 		-v $(PWD)/libs:/home/rstudio/libs \
 		-d \
 		--name rstudio-ofelia \
-		r363u-tidyv    
+		r4-tidyv    
 	@echo "*** Rstudio should be available on port 8790"
 
 # clean up rstudio stuff
