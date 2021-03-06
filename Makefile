@@ -1,12 +1,19 @@
 # Makefile
 UID := $(shell id -u)
+include .env
+export $(shell sed 's/=.*//' .env)
 
 .PHONY: foo
 foo:
 	echo $(PWD)
 	echo $(UID)
 
+# dev set up
+.PHONY: dev-up
+dev-up: rstudio-run pgweb-run
+
 # build the rstudio image
+.PHONY: rstudio-build
 rstudio-build: dockerfile-rstudio
 	docker build \
 		 --file dockerfile-rstudio \
@@ -19,7 +26,7 @@ rstudio-build: dockerfile-rstudio
 # run the rstudio image
 .PHONY: rstudio-run
 rstudio-run: 
-	docker run --rm \
+	@docker run --rm \
 		-p 8790:8787 \
 		-e PASSWORD=sitrep \
 		-e USERID=$(UID) \
@@ -32,10 +39,20 @@ rstudio-run:
 		r4-tidyv    
 	@echo "*** Rstudio should be available on port 8790"
 
-# clean up rstudio stuff
-.PHONY: rstudio-clean
-rstudio-clean:
+# Run pgweb and connect automaticaly to the UDS
+.PHONY: pgweb-run
+pgweb-run:
+	@docker run -p 8791:8081 -d --rm \
+		--name pgweb_uds \
+		-e DATABASE_URL=postgres://sharris9:$(UDS_PWD)@172.16.149.132:5432/uds?sslmode=disable \
+		sosedoff/pgweb
+	@echo "*** PGWeb should be available on port 8791"
+
+# clean up dev stuff
+.PHONY: dev-clean
+dev-clean:
 	docker stop rstudio-ofelia
+	docker stop pgweb_uds
 
 # fix permissions
 .PHONY: fix-permissions
@@ -46,4 +63,6 @@ fix-permissions:
 	chmod -R g+rwXs  work 
 	# For all the directories in here, make all new files created by default have the right group privileges, irrespective of the user UMASK
 	setfacl -R –d –m g::rwX work  
+
+
 
