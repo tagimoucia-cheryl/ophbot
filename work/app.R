@@ -1,7 +1,7 @@
 # Steve Harris
 # created 2021-03-06
 
-# Create a filter that identifies INPATIENTS
+# Demo script that predicts next vital sign
 
 # ****
 # TODO
@@ -20,7 +20,6 @@ library(Hmisc)
 library(lme4)
 library(broom.mixed)
 library(collections)
-# devtools::reload(pkgload::inst('emapR'))
 library(checkmate)
 library(data.table)
 library(emapR) # see setup.R for installation
@@ -28,7 +27,9 @@ library(emapR) # see setup.R for installation
 # *************
 # Configuration
 # *************
-rlang::inform('--- foo')
+rlang::inform('--- Demo script that predicts next vital sign')
+llabel <- 'Pulse'
+wwindow <- -72
 
 debug <- FALSE
 if (debug) rlang::inform('!!! debug mode ON')
@@ -38,7 +39,7 @@ input_schema <- 'star_test'
 
 # Output: 
 target_schema <- 'icu_audit'
-target_table <- 'vitals_tower_last7d'
+target_table <- 'vitals_tower_predictor'
 target_table_path <- DBI::Id(schema=target_schema, table=target_table)
 
 # Wards of interest
@@ -147,6 +148,8 @@ for (k in vitals_dict$keys()) {
   wdt[id_in_application == k, label := vitals_dict$get(k)]
 }
 
+
+# TODO factor out all these as functions
 # Extract systolic and from text diastolic 
 tdt <- wdt[label == 'BP']
 tdt <- tdt[, c('SBP', 'DBP') := data.table::tstrsplit(value_as_text, split='\\/')]
@@ -196,8 +199,6 @@ timeconstant_vars <- c('mrn', 'ward', 'room', 'wardi', 'bed', 'bedi', 'label' )
 # Modelling proof of principle
 # https://m-clark.github.io/R-models/
 wdt[,.N,by=label]
-llabel <- 'Pulse'
-wwindow <- -72
 tdt <- wdt[label == llabel & tt >= wwindow]
 
 # model
