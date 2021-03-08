@@ -19,8 +19,18 @@ cran_libs <- c(
 ,'magrittr'
 ,'readr'
 ,'odbc'
+,'collections'
+,'strex'
+,'merlin'
+,'tidyverse'
+,'Hmisc'
+,'rms'
+,'lme4'
+,'merTools'
+,'broom.mixed'
+,'checkmate'
 )
-# install.packages('RODBCDBI')
+install.packages('checkmate')
 
 for (ll in cran_libs) {
   renv::install(ll)
