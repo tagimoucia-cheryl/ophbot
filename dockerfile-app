@@ -18,6 +18,8 @@ COPY odbc/* /etc/
 
 # External packages (CRAN)
 RUN install2.r data.table odbc checkmate
+RUN install2.r tidyverse lubridate rms Hmisc lme4 broom.mixed collections
+RUN install2.r strex
 
 # External packages (GitHub)
 RUN installGithub.r inform-health-informatics/emapR
@@ -30,6 +32,9 @@ RUN make install_packages
 
 # Add your local directory (also called 'app') into 'app'
 ADD app /home/cronbot/src/app
+
+COPY work/app.R /home/cronbot/src/app/
+ADD work/sql /home/cronbot/src/sql
 
 # Ensure all files are owned by the user cronbot
 RUN chown -R "1001:1001" /home/cronbot
