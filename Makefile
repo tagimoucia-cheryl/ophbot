@@ -57,12 +57,11 @@ rstudio-build: dockerfile-rstudio
 rstudio-run: 
 	@docker run --rm \
 		-p 8790:8787 \
-		-e PASSWORD=sitrep \
+		-e PASSWORD=notbot \
 		-e USERID=$(UID) \
 		-e ROOT=true \
-		-v $(PWD)/work:/home/rstudio/work \
+		-v $(PWD)/dev:/home/rstudio/dev \
 		-v $(PWD)/renv:/home/rstudio/renv \
-		-v $(PWD)/libs:/home/rstudio/libs \
 		-d \
 		--name rstudio-ofelia \
 		r4-tidyv    

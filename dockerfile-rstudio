@@ -1,29 +1,26 @@
+# Use the tidyverse image which comes with RStudio server
+# https://hub.docker.com/r/rocker/tidyverse
 FROM rocker/tidyverse:4.0.3
 
+# Packages to enable ODBC and installation of the Microsoft drivers via curl
 RUN apt-get update -y && apt-get install -y  \
-    unixodbc \
-    unixodbc-dev \
-    tdsodbc \
+    curl \
     freetds-bin \
     freetds-dev \
+    git \
+    gnupg2 \
     odbc-postgresql \
-    tzdata \
-    curl \
-    gnupg2
+    tdsodbc \
+    unixodbc \
+    unixodbc-dev 
 
 # See about installing ODBC drivers here: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
-# Note that the driver version installed needs to match the version used in the code
-# In this case for Ubuntu 18.04: ODBC SQL driver 17
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-# Debian stretch (as per tidyverse:4)
+# Note that the driver version installed needs to match the version used in the code
+# Here debian stretch (as per tidyverse:4)
 RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
-# Ubuntu 18.04
-# RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 RUN apt-get update -y
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools
-# 2021-03-05 fails b/c of dependency error; but reported as optional so try without
-# RUN ACCEPT_EULA=Y apt-get install -y unixodbc-dev 
-
 
 COPY odbc/* /etc/
 # Permissions are such that works fine as root but not from RStudio where user is not root
@@ -33,16 +30,19 @@ RUN chmod a+rw /etc/odbc.ini && chmod a+rw /etc/odbcinst.ini
 
 # https://www.rocker-project.org/use/extending/
 # install core libraries including pak for package management
-RUN install2.r odbc pak
+RUN install2.r odbc renv
+RUN mkdir /home/rstudio/renv
+ENV RENVS_PATHS_CACHE=/home/rstudio/renv
+RUN Rscript -e 'renv::consent(provided = TRUE); renv::init(bare=TRUE)'
 
 # this is necessary for the rstudio instance to work
 COPY .Renviron /home/rstudio
 
 # this allows installation from the commandline
-ENV http_proxy
-ENV https_proxy
-ENV HTTP_PROXY
-ENV HTTPS_PROXY
+ENV http_proxy=$(http_proxy)
+ENV https_proxy=$(https_proxy)
+ENV HTTP_PROXY=$(HTTP_PROXY)
+ENV HTTPS_PROXY=$(HTTPS_PROXY)
 
 ENV UID=$UID
 

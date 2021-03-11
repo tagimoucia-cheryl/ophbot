@@ -49,3 +49,8 @@ vignettes/*.pdf
 .env
 
 todo.txt
+# renv ignore files from the dev setup
+dev/renv/library/
+dev/renv/lock/
+dev/renv/python/
+dev/renv/staging/
