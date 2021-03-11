@@ -16,16 +16,17 @@ help : Makefile
 app-build:
 	docker-compose build
 
+
 ## app-run          : runs the app as per the frequency defined in docker-compose
 ##                    (a log will also run automatically; this can be cancelled by Ctrl-C)
-.PHONY: app-build
-app-build:
+.PHONY: app-run
+app-run:
 	docker-compose up -d
 	docker-compose logs -f
 
 ## app-clean        : cleans the app up
-.PHONY: app-build
-app-build:
+.PHONY: app-clean
+app-clean:
 	docker-compose down
 
 

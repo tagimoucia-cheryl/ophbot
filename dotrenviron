@@ -1,6 +1,6 @@
 # IMPORTANT
 # DO NOT ADD THE .Renviron VERSION OF THIS FILE TO VERSION CONTROL
-# RENAME from Renviron-example to .Renviron in place and then update the
+# RENAME from dotrenviron to .Renviron in place and then update the
 # environment variables with actual values
 
 # IDS access
