@@ -1,12 +1,18 @@
+# R Environment Variables and secrets
+.Renviron
+.env
+
 # All data
 # You will need to specifically add data you want to publish to .gitkeep
-work/data/secure/*
-work/data/*
-# packages installed by R
-libs/*
+dev/data/secure/*
+dev/data/*
+
 # renv packages
 renv/*
-work/renv/library/*
+dev/renv/library/*
+dev/renv/lock/
+dev/renv/python/
+dev/renv/staging/
 
 
 # Outputs
@@ -43,14 +49,6 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-# R Environment Variables
-./.Renviron
-.Renviron
-.env
+
 
 todo.txt
-# renv ignore files from the dev setup
-dev/renv/library/
-dev/renv/lock/
-dev/renv/python/
-dev/renv/staging/
