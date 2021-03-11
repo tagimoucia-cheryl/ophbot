@@ -32,17 +32,17 @@ RUN chmod a+rw /etc/odbc.ini && chmod a+rw /etc/odbcinst.ini
 
 
 # https://www.rocker-project.org/use/extending/
-# install core libraries
-RUN install2.r odbc renv
+# install core libraries including pak for package management
+RUN install2.r odbc pak
 
 # this is necessary for the rstudio instance to work
 COPY .Renviron /home/rstudio
 
 # this allows installation from the commandline
-ENV http_proxy="http://www-cache-n.xuclh.nhs.uk:3128/"
-ENV https_proxy="http://www-cache-n.xuclh.nhs.uk:3128/"
-ENV HTTP_PROXY="http://www-cache-n.xuclh.nhs.uk:3128/"
-ENV HTTPS_PROXY="http://www-cache-n.xuclh.nhs.uk:3128/"
+ENV http_proxy
+ENV https_proxy
+ENV HTTP_PROXY
+ENV HTTPS_PROXY
 
 ENV UID=$UID
 

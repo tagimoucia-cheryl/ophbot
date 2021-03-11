@@ -1,0 +1,23 @@
+# IMPORTANT
+# DO NOT ADD THE .Renviron VERSION OF THIS FILE TO VERSION CONTROL
+# RENAME from Renviron-example to .Renviron in place and then update the
+# environment variables with actual values
+
+# IDS access
+IDS_PWD=foo
+IDS_HOST=bar
+IDS_USER=me
+
+# UDS access
+UDS_PWD=foo
+UDS_HOST=bar
+UDS_USER=me
+
+# Internet access
+http_proxy=http://my-hospital.nhs.uk:1234/
+HTTP_PROXY=http://my-hospital.nhs.uk:1234/
+https_proxy=http://my-hospital.nhs.uk:1234/
+HTTPS_PROXY=http://my-hospital.nhs.uk:1234/
+
+
+ 

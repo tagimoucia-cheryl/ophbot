@@ -1,18 +1,45 @@
-# Makefile
+## Utilities to develop a full machine learning pipeline on EMAP
 UID := $(shell id -u)
+# These two lines make local environment variables available to Make
 include .env
 export $(shell sed 's/=.*//' .env)
 
-.PHONY: foo
-foo:
-	echo $(PWD)
-	echo $(UID)
+# Self-documenting help; any comment line starting ## will be printed
+# https://swcarpentry.github.io/make-novice/08-self-doc/index.html
+## help             : call this help function
+.PHONY: help
+help : Makefile
+	@sed -n 's/^##//p' $<
 
-# dev set up
+## app-build        : builds the app
+.PHONY: app-build
+app-build:
+	docker-compose build
+
+## app-run          : runs the app as per the frequency defined in docker-compose
+##                    (a log will also run automatically; this can be cancelled by Ctrl-C)
+.PHONY: app-build
+app-build:
+	docker-compose up -d
+	docker-compose logs -f
+
+## app-clean        : cleans the app up
+.PHONY: app-build
+app-build:
+	docker-compose down
+
+
+## dev-build        : builds the dev containers (just Rstudio for now)
+.PHONY: dev-build
+dev-build: rstudio-build
+
+## dev-up           : sets up Rstudio (8790) and PGWeb (8791)
+##                    e.g. go to http://172.16.149:155:8790 for RStudio
+##                    You may need to edit the port numbers if others are using this set-up on the same machine
 .PHONY: dev-up
 dev-up: rstudio-run pgweb-run
 
-# build the rstudio image
+## rstudio-build    : builds the Rstudio container
 .PHONY: rstudio-build
 rstudio-build: dockerfile-rstudio
 	docker build \
@@ -23,7 +50,8 @@ rstudio-build: dockerfile-rstudio
 		 --build-arg HTTPS_PROXY \
 		 . -t r4-tidyv
 
-# run the rstudio image
+## rstudio-run      : runs the Rstudio container (the username is rstudio)
+##                    (the password to Rstudio is set in this section of the Makefile)
 .PHONY: rstudio-run
 rstudio-run: 
 	@docker run --rm \
@@ -39,7 +67,7 @@ rstudio-run:
 		r4-tidyv    
 	@echo "*** Rstudio should be available on port 8790"
 
-# Run pgweb and connect automaticaly to the UDS
+## pgweb-run        : Run pgweb and connect automaticaly to the UDS
 .PHONY: pgweb-run
 pgweb-run:
 	@docker run -p 8791:8081 -d --rm \
@@ -49,12 +77,15 @@ pgweb-run:
 	@echo "*** PGWeb should be available on port 8791"
 
 # clean up dev stuff
+## dev-clean        : Stops and removes the RStudio and pgweb containers
 .PHONY: dev-clean
 dev-clean:
 	docker stop rstudio-ofelia
 	docker stop pgweb_uds
 
-# fix permissions
+# Useful generic code chunks
+# Not part of the main makefile
+# fix permissions on the GAE
 .PHONY: fix-permissions
 fix-permissions: 
 	# Set the group for all files to be docker. All GAE users are in the docker group
