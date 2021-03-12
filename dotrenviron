@@ -20,4 +20,6 @@ https_proxy=http://my-hospital.nhs.uk:1234/
 HTTPS_PROXY=http://my-hospital.nhs.uk:1234/
 
 
+# https://rstudio.github.io/renv/articles/docker.html
+RENV_PATHS_CACHE=/home/rstudio/renv
  
