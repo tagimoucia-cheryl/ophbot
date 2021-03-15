@@ -2,10 +2,6 @@
 # Using rocker for R but could use python:3.8-slim or similar
 FROM rocker/tidyverse:4.0.4
 
-# Remove root privileges from the container process and run as 'cronbot'
-RUN groupadd --gid 1001 cronbot && \
-    useradd --uid 1001 --gid 1001 --create-home --shell /bin/bash cronbot
-
 # install necessary packages for connecting from R to SQL databases
 RUN apt-get update -y && apt-get install -y \
     unixodbc \
@@ -17,25 +13,37 @@ RUN apt-get update -y && apt-get install -y \
 # Copy the odbc configuration files onto the image
 COPY odbc/* /etc/
 
+# YOU MUST BUILD WITH build_args i.e. --build-arg USER_ID=$(id -u) \
+# Now install and set-up as per calling user
+# See https://vsupalov.com/docker-shared-permissions/
+ARG USER_NAME
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID $USER_NAME
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER_NAME
+
 # Install necessary libraries and R set-up
 # Do separately to the app installation so that unless you change the necessary
 # libraries you can debug end edit the app without rebuilding the full image
-COPY app/setup.R /home/cronbot/setup.R
-RUN Rscript /home/cronbot/setup.R
+# RUN mkdir /home/$USER_NAME/libs
+
+RUN Rscript -e "install.packages('renv')"
+COPY dev/renv.lock /home/$USER_NAME/renv.lock
+RUN Rscript -e "renv::restore(lockfile='/home/$USER_NAME/renv.lock')"
+
+# COPY .Renviron and .Rprofile
+COPY dev/.R* /home/$USER_NAME/
 
 # Now copy supporting files in app to the image
-COPY app/app /home/cronbot/app
+COPY app/app /home/$USER_NAME/app
 # Now copy the main file 'app.R'
-COPY app/app.R /home/cronbot/
-
-# Ensure all files are owned by the user cronbot
-RUN chown -R "1001:1001" /home/cronbot
-USER cronbot
-
-WORKDIR /home/cronbot
+COPY app/app.R /home/$USER_NAME/
 
 # Start the container with a 'dummy' process that prevents the container
 # immediately stopping
+USER $USER_NAME
+WORKDIR /home/$USER_NAME
 CMD tail -f /dev/null
 
 

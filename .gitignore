@@ -9,6 +9,7 @@ dev/data/*
 
 # renv packages
 renv/*
+dev/renv/*
 dev/renv/library/*
 dev/renv/lock/
 dev/renv/python/

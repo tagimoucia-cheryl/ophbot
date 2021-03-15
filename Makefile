@@ -1,5 +1,9 @@
+## =============================================================
 ## Utilities to develop a full machine learning pipeline on EMAP
+## =============================================================
+##                                                              
 UID := $(shell id -u)
+GID := $(shell id -g)
 # These two lines make local environment variables available to Make
 include .env
 export $(shell sed 's/=.*//' .env)
@@ -23,12 +27,23 @@ app-buildso: dockerfile-app
 		 --build-arg https_proxy \
 		 --build-arg HTTP_PROXY \
 		 --build-arg HTTPS_PROXY \
+		 --build-arg USER_NAME=$(USER) \
+		 --build-arg USER_ID=$(UID) \
+		 --build-arg GROUP_ID=$(GID) \
 		 . -t app-$(APP_NAME)
 
-## app-runso      : runs the app as a standalone (so) container for testing
+## app-runso        : runs the app as a standalone (so) container for testing
+##                    imports identical environment file etc.
 .PHONY: app-runso
 app-runso: 
-	docker run app-$(APP_NAME)
+	docker run  \
+		--rm -ti \
+		--name appso-$(APP_NAME) \
+		--env-file=.env \
+        -u $(UID):$(GID) \
+		app-$(APP_NAME) \
+		/bin/bash
+
 
 ## app-build        : builds the app
 .PHONY: app-build
@@ -105,17 +120,21 @@ dev-clean:
 	docker stop rstudio-ofelia
 	docker stop pgweb_uds
 
+##                                                              
+## =============================================================
+##                                                              
+
 # Useful generic code chunks
 # Not part of the main makefile
 # fix permissions on the GAE
 .PHONY: fix-permissions
 fix-permissions: 
 	# Set the group for all files to be docker. All GAE users are in the docker group
-	chgrp -R docker work  
+	chgrp -R docker .  
 	# Grant read, write, and open folder permission for all exisiting files to the docker group, and make new folders created have the docker group
-	chmod -R g+rwXs  work 
+	chmod -R g+rwXs  . 
 	# For all the directories in here, make all new files created by default have the right group privileges, irrespective of the user UMASK
-	setfacl -R –d –m g::rwX work  
+	setfacl -R –d –m g::rwX /.  
 
 
 

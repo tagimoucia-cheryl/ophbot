@@ -373,6 +373,18 @@
       "Repository": "RSPM",
       "Hash": "fd2844b3a43ae2d27e70ece2df1b4e2a"
     },
+    "emapR": {
+      "Package": "emapR",
+      "Version": "0.1.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "emapR",
+      "RemoteUsername": "inform-health-informatics",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "1924f9926e65e8bda110c83aa19fcb9cae29d5fd",
+      "Hash": "8e2187ab05a94aa76ff5a8f85198fa98"
+    },
     "evaluate": {
       "Package": "evaluate",
       "Version": "0.14",

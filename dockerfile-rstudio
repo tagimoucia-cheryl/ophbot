@@ -36,6 +36,7 @@ ENV RENV_PATHS_CACHE=/home/rstudio/renv
 RUN Rscript -e 'renv::consent(provided = TRUE); renv::init(bare=TRUE)'
 
 # this is necessary for the rstudio instance to work
+RUN mkdir /home/rstudio/dev
 COPY .Renviron /home/rstudio
 COPY .Rprofile /home/rstudio
 
