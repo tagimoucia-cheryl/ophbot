@@ -51,7 +51,10 @@ app-build:
 	cp dev/setup.R app/setup.R
 	cp dev/app.R app/app.R
 	cp -R dev/app app/app
-	docker-compose build
+	docker-compose build \
+		 --build-arg USER_NAME=$(USER) \
+		 --build-arg USER_ID=$(UID) \
+		 --build-arg GROUP_ID=$(GID) 
 
 
 ## app-run          : runs the app as per the frequency defined in docker-compose

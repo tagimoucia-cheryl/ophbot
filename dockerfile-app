@@ -1,17 +1,32 @@
 # Pull your base docker image
-# Using rocker for R but could use python:3.8-slim or similar
+# Using rocker for R and the light 'versioned' tag (not the RStudio)
 FROM rocker/tidyverse:4.0.4
 
-# install necessary packages for connecting from R to SQL databases
-RUN apt-get update -y && apt-get install -y \
+# Packages to enable ODBC and installation of the Microsoft drivers via curl
+RUN apt-get update -y && apt-get install -y  \
+    curl \
+    freetds-bin \
+    freetds-dev \
+    git \
+    gnupg2 \
+    odbc-postgresql \
+    tdsodbc \
     unixodbc \
     unixodbc-dev \
-    tdsodbc \
-    odbc-postgresql \
     tzdata
 
-# Copy the odbc configuration files onto the image
+# See about installing ODBC drivers here: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+# Note that the driver version installed needs to match the version used in the code
+# Here debian stretch (as per tidyverse:4)
+RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update -y
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools
+
+# Permissions are such that works fine as root but not from RStudio where user is not root
+# so MUST do the following else an unhelpful error message tells you the file does not exist
 COPY odbc/* /etc/
+RUN chmod a+rw /etc/odbc.ini && chmod a+rw /etc/odbcinst.ini
 
 # YOU MUST BUILD WITH build_args i.e. --build-arg USER_ID=$(id -u) \
 # Now install and set-up as per calling user
@@ -26,14 +41,13 @@ RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER_
 # Install necessary libraries and R set-up
 # Do separately to the app installation so that unless you change the necessary
 # libraries you can debug end edit the app without rebuilding the full image
-# RUN mkdir /home/$USER_NAME/libs
 
-RUN Rscript -e "install.packages('renv')"
+RUN install2.r odbc renv
 COPY dev/renv.lock /home/$USER_NAME/renv.lock
 RUN Rscript -e "renv::restore(lockfile='/home/$USER_NAME/renv.lock')"
 
 # COPY .Renviron and .Rprofile
-COPY dev/.R* /home/$USER_NAME/
+COPY .R* /home/$USER_NAME/
 
 # Now copy supporting files in app to the image
 COPY app/app /home/$USER_NAME/app

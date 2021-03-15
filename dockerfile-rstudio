@@ -1,6 +1,6 @@
 # Use the tidyverse image which comes with RStudio server
 # https://hub.docker.com/r/rocker/tidyverse
-FROM rocker/tidyverse:4.0.3
+FROM rocker/tidyverse:4.0.4
 
 # Packages to enable ODBC and installation of the Microsoft drivers via curl
 RUN apt-get update -y && apt-get install -y  \
@@ -12,7 +12,8 @@ RUN apt-get update -y && apt-get install -y  \
     odbc-postgresql \
     tdsodbc \
     unixodbc \
-    unixodbc-dev 
+    unixodbc-dev \
+    tzdata
 
 # See about installing ODBC drivers here: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
