@@ -1,3 +1,6 @@
+TODO
+* switch from tidyverse image with rocker to lighter weight image with similar build spec but without rstudio
+
 # EMAP-bot
 
 This is a template docker arrangement for developing, and then running a machine learning pipeline on a regular schedule. In the UCLH EMAP environment, this means that we can build connect to the live EMAP database ('star'), wrangle and analyse the data, and then return the results back to a table in the User Data Store (UDS). This in turn can then feed a dashboard, or be made available to the Electronic Health Record itself in near real time.
@@ -33,13 +36,34 @@ e.g.
 
 ## Develop your application
 
+At the end of development and before deployment, you need to generate a list of libraries that must be available for the application to run. From your development environment, with _everything_ loaded run the following command. Ideally, restart your R session before this so that you have nothing extraneous loaded.
+```R
+# First ensure you've unloaded everything
+invisible(lapply(paste0("package:", names(sessionInfo()$otherPkgs)),   # Unload add-on packages
+                 detach,
+                 character.only = TRUE, unload = TRUE))
+rm(list=ls())
+
+# Run the app from the console
+# This ensures that the app both works and that you have a complete set of necessary libraries loaded.
+source(app.R)
+pkgs <- (.packages())
+print(pkgs)
+```
+
+Now hand edit the `dev/setup.R` file to ensure that all the necessary packages are listed for install. The first half of the list is for CRAN, and the second half will handle GitHub installs. Please see the existing sample file for help in how this should be set up.
 
 ### Notes on the RStudio dev environment
 
 * Installing additional libraries: The RStudio image is able to install from CRAN and from GitHub. It comes pre-installed with ODBC and the necessary drivers to connect to PostgreSQL and Microsoft SQL Server. Everything the user might need will need to be installed from within RStudio. 
+* It uses the Rocker Tidyverse image which means that it comes pre-installed with a decent selection of libraries.
 * The `.Renviron` file holds all the 'secrets' (usernames, passwords etc.) and _must_ be in .gitignore
 
+## Build and run your application
 
+This is a testing step that runs the application just once from docker. It confirms that the application will run, and that all the libraries (as per the previous step) have been made available in the Docker image.
+
+## Deploy your application
 
 
 

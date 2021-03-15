@@ -29,7 +29,7 @@ RUN chmod a+rw /etc/odbc.ini && chmod a+rw /etc/odbcinst.ini
 
 
 # https://www.rocker-project.org/use/extending/
-# install core libraries including pak for package management
+# install core libraries including renv for package management
 RUN install2.r odbc renv
 RUN mkdir /home/rstudio/renv
 ENV RENV_PATHS_CACHE=/home/rstudio/renv

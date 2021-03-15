@@ -11,9 +11,31 @@ export $(shell sed 's/=.*//' .env)
 help : Makefile
 	@sed -n 's/^##//p' $<
 
+## app-buildso      : builds the app as a standalone (so) container for testing
+.PHONY: app-buildso
+app-buildso: dockerfile-app
+	cp dev/setup.R app/setup.R
+	cp dev/app.R app/app.R
+	cp -R dev/app app/app
+	docker build \
+		 --file dockerfile-app \
+		 --build-arg http_proxy \
+		 --build-arg https_proxy \
+		 --build-arg HTTP_PROXY \
+		 --build-arg HTTPS_PROXY \
+		 . -t app-$(APP_NAME)
+
+## app-runso      : runs the app as a standalone (so) container for testing
+.PHONY: app-runso
+app-runso: 
+	docker run app-$(APP_NAME)
+
 ## app-build        : builds the app
 .PHONY: app-build
 app-build:
+	cp dev/setup.R app/setup.R
+	cp dev/app.R app/app.R
+	cp -R dev/app app/app
 	docker-compose build
 
 

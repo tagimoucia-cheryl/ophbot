@@ -13,6 +13,7 @@
 # *************
 
 # Libraries
+# CRAN
 library(tidyverse)
 library(strex)
 library(lubridate)
@@ -23,6 +24,7 @@ library(broom.mixed)
 library(collections)
 library(checkmate)
 library(data.table)
+# Github
 library(emapR) # see setup.R for installation
 
 # *************
@@ -97,7 +99,7 @@ emapR::udsConnect()
 
 # Load recent vitals
 # ==================
-query <- readr::read_file('sql/query_recent_inpatient_vitals.sql')
+query <- readr::read_file('app/query_recent_inpatient_vitals.sql')
 dt <- DBI::dbGetQuery(ctn, query)
 setDT(dt)
 names(dt)
@@ -105,7 +107,7 @@ dtobs <- data.table::copy(dt)
 
 # Load current inpatient filter
 # =============================
-query <- readr::read_file('sql/query_current_inpatients.sql')
+query <- readr::read_file('app/query_current_inpatients.sql')
 dt <- DBI::dbGetQuery(ctn, query)
 setDT(dt)
 names(dt)
