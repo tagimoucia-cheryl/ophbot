@@ -1,24 +1,12 @@
-Please note that all the _project_ work should live under 'work'.
-Anything else won't persist.
+This readme (`dev/readme.md`) is distinct from the main readme (`./readme.md`).
+It specifically addresses the details of the application that the 'bot' runs.
 
+In this case, we're build a live NEWS score predictor.
 
-## Todo
-### Now
-- simple table as per caboodle of ICU admissions/discharges (aka stays)
-- compare and check against caboodle
-- then expand this to one row per day to allow census/admission/discharge review
+Note that _everything_ except for `app.R` and any files in the `app` directory are ignored by the main application. Only these are copied to the docker app image. This also means that your 'app' must maintain relative file paths with respect to this structure.
 
-### Later
-- add in intermediate care areas such as ECU
-
-## Log
-Reverse chronology
-
-### 2021-01-03
-
-### 2021-01-02 
-initial set-up
-rstudio running from rocker
-packages installed locally so they persist across sessions
-local mount for data
-connection to uds
+-|
+ |-app.R
+ |-app
+   |-setup.R
+   |-read.R
