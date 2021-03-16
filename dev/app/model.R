@@ -36,6 +36,7 @@ mdt[new_data==FALSE, tlast := -1 * max(tt), by=.(mrn,label)]
 mdt[new_data==TRUE, tlast := NA]
 Hmisc::describe(mdt$tlast)
 
+
 if (debug) {
   # inspect
   # focus on who have not had a measurement in the last 8 hours
