@@ -46,11 +46,12 @@ RUN install2.r odbc renv
 COPY dev/renv.lock /home/$USER_NAME/renv.lock
 RUN Rscript -e "renv::restore(lockfile='/home/$USER_NAME/renv.lock')"
 
-# COPY .Renviron and .Rprofile
-COPY .R* /home/$USER_NAME/
+# COPY .Renviron NOT .Rprofile since you just want the secrets
+# and .Rprofile will try to run renv::activate() which is not available
+COPY .Renviron /home/$USER_NAME/
 
 # Now copy supporting files in app to the image
-COPY app/app /home/$USER_NAME/app
+COPY app/app /home/$USER_NAME/
 # Now copy the main file 'app.R'
 COPY app/app.R /home/$USER_NAME/
 

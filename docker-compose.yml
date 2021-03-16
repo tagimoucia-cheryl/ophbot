@@ -5,7 +5,7 @@ services:
     image: app
     container_name: app
     restart: always
-    user: cronbot
+    user: ${USER}
     build:
       context: .
       dockerfile: dockerfile-app
@@ -19,7 +19,7 @@ services:
       # Set the schedule for your job
       ofelia.job-exec.app.schedule: "@every 15m"
       # Run this script on the above schedule
-      ofelia.job-exec.app.command: "Rscript app/app.R"
+      ofelia.job-exec.app.command: "Rscript app.R"
       ofelia.job-exec.no-overlap: "true"
       ofelia.job-exec.app.slack-webhook: ${SLACK_URL_BOT}
 
