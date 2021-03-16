@@ -51,5 +51,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
-
 todo.txt
+
+# gitsubmodules
+dev/.gitignore
+dev/.git/*
