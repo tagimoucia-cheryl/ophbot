@@ -17,7 +17,7 @@ services:
     labels:
       ofelia.enabled: "true"
       # Set the schedule for your job
-      ofelia.job-exec.app.schedule: "@every 1m"
+      ofelia.job-exec.app.schedule: "@every 15m"
       # Run this script on the above schedule
       ofelia.job-exec.app.command: "Rscript app.R"
       ofelia.job-exec.no-overlap: "true"
