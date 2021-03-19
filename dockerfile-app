@@ -50,15 +50,17 @@ RUN Rscript -e "renv::restore(lockfile='/home/$USER_NAME/renv.lock')"
 # and .Rprofile will try to run renv::activate() which is not available
 COPY .Renviron /home/$USER_NAME/
 
-# Now copy supporting files in app to the image
-COPY app/app /home/$USER_NAME/
-# Now copy the main file 'app.R'
-COPY app/app.R /home/$USER_NAME/
+# Now copy app and supporting files in /app to the image
+# COPY app/app.R /home/$USER_NAME/app.R
+COPY app/app /home/$USER_NAME/app
+COPY .Renviron /home/$USER_NAME/app/
 
 # Start the container with a 'dummy' process that prevents the container
 # immediately stopping
+RUN chown -R $USER_NAME /home/$USER_NAME
+RUN chmod -R a+rw /home/$USER_NAME/app
 USER $USER_NAME
-WORKDIR /home/$USER_NAME
+WORKDIR /home/$USER_NAME/app
 CMD tail -f /dev/null
 
 
